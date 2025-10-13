@@ -2,7 +2,9 @@
 
 using namespace std;
 
-ByteStream::ByteStream(uint64_t capacity) : capacity_(capacity) {}
+ByteStream::ByteStream(uint64_t capacity) : capacity_(capacity) {
+  stream_.reserve(capacity);
+}
 
 void Writer::push(string data) {
   if (error_ || is_closed_ || available_capacity() == 0 || data.empty()) {

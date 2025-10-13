@@ -1,6 +1,7 @@
 #pragma once
 
 #include "byte_stream.hh"
+#include <unordered_map>
 
 class Reassembler
 {
@@ -42,4 +43,8 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
+  std::unordered_map<uint64_t, std::string> ready_to_send_ {};
+  uint64_t buffer_point_ {0};
+
+  void push_helper();
 };
