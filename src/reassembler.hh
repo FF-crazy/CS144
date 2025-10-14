@@ -44,7 +44,9 @@ public:
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
   std::map<uint64_t, std::pair<std::string, bool>> ready_to_send_ {};
-  uint64_t buffer_point_ {0};
+  uint64_t buffer_point_ { 0 };
 
-  void push_helper();
+  void push_helper_();
+  void merge_segment_();
+  void push_cache_( uint64_t& first_index, std::string& data, bool& is_last_substring );
 };

@@ -24,8 +24,7 @@ using namespace std;
 TunTapFD::TunTapFD( const string& devname, const bool is_tun )
   : FileDescriptor( ::CheckSystemCall( "open", open( CLONEDEV, O_RDWR | O_CLOEXEC ) ) )
 {
-  struct ifreq tun_req
-  {};
+  struct ifreq tun_req {};
 
   tun_req.ifr_flags = static_cast<int16_t>( ( is_tun ? IFF_TUN : IFF_TAP ) | IFF_NO_PI ); // no packetinfo
 
