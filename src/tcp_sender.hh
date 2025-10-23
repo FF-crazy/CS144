@@ -47,6 +47,7 @@ private:
   // Variables initialized in constructor
   ByteStream input_;
   Wrap32 isn_;
+  Wrap32 seqno_ {isn_};
   bool is_SYN_ {};
   bool is_FIN_ {};
   uint32_t window_size_ {1};
@@ -55,4 +56,6 @@ private:
   uint64_t repeat_time_ {0};
   uint64_t current_time_ms_ {0};
   std::deque<TCPSenderMessage> outstanding_ {};
+
+  TCPSenderMessage make_message_(uint64_t size);
 };
