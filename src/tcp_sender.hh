@@ -50,12 +50,12 @@ private:
   Wrap32 seqno_;
   bool is_SYN_ {};
   bool is_FIN_ {};
-  uint32_t window_size_ {1};
+  uint32_t window_size_ { 1 };
   uint64_t initial_RTO_ms_;
-  uint64_t RTO_ms_ {initial_RTO_ms_};
-  uint64_t repeat_time_ {0};
-  uint64_t current_time_ms_ {0};
+  uint64_t RTO_ms_ { initial_RTO_ms_ };
+  uint64_t repeat_time_ { 0 };
+  uint64_t current_time_ms_ { 0 };
   std::deque<TCPSenderMessage> outstanding_ {};
 
-  TCPSenderMessage make_message_(uint64_t size);
+  TCPSenderMessage make_message_( uint64_t size );
 };
