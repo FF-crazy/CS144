@@ -1,20 +1,7 @@
-Stanford CS 144 Networking Lab
+Stanford CS 144 Networking Lab 感想与经验
 ==============================
 
-These labs are open to the public under the (friendly) request that to
-preserve their value as a teaching tool, solutions not be posted
-publicly by anybody.
-
-Website: https://cs144.stanford.edu
-
-To set up the build system: `cmake -S . -B build`
-
-To compile: `cmake --build build`
-
-To run tests: `cmake --build build --target test`
-
-To run speed benchmarks: `cmake --build build --target speed`
-
-To run clang-tidy (which suggests improvements): `cmake --build build --target tidy`
-
-To format code: `cmake --build build --target format`
+* 我写的版本是2024年的minnow，官网
+* 推荐阅读 **计算机网络：自顶向下方法**，由于视频来源自N年前的东拼西凑的老古董，以及老师的讲课风格我很不喜欢（）让我看得昏昏欲睡，不推荐看网课。
+* 本课程的所有lab主打的就是一个面向测试用例编程，所有的项目文档都好像是写了，但是又好像什么都没写（官网说这是这是模拟你们上班当牛马以后领导给发的文档，
+我想问问已经上班的各位文档真有这么写的吗？）只有部分文档写的还可以，有cs61b那种面面俱到的水平。
