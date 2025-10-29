@@ -1,10 +1,13 @@
 #pragma once
 
 #include <queue>
+#include <unordered_map>
+#include <utility>
 
 #include "address.hh"
 #include "ethernet_frame.hh"
 #include "ipv4_datagram.hh"
+#include "arp_message.hh"
 
 // A "network interface" that connects IP (the internet layer, or network layer)
 // with Ethernet (the network access layer, or link layer).
@@ -80,5 +83,14 @@ private:
   Address ip_address_;
 
   // Datagrams that have been received
+  const uint64_t CACHE_TTL_ {30000};
+  const uint64_t ARP_REQUEST_TIMEOUT {5000}; //鬼屋，多打了一个0
   std::queue<InternetDatagram> datagrams_received_ {};
+  std::unordered_map<uint32_t, EthernetAddress> ip_to_eth_ {};
+  uint64_t current_time_ {0};
+  std::queue<std::pair<uint32_t, uint64_t>> cache_ttl_ {};
+  std::unordered_map<uint32_t, uint64_t> arp_request_time_ {};
+  std::unordered_map<uint32_t, std::vector<InternetDatagram>> pending_datagram_ {};
+
+  ARPMessage make_ARP_(uint16_t opcode, uint32_t ip, EthernetAddress eth);
 };
