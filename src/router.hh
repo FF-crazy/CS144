@@ -8,6 +8,56 @@
 
 // \brief A router that has multiple network interfaces and
 // performs longest-prefix-match routing between them.
+
+class TrieNode
+{
+public:
+  std::optional<uint8_t> end_value_ {};
+  std::array<std::shared_ptr<TrieNode>, 2> next_ {};
+
+  TrieNode() = default;
+};
+
+class Trie
+{
+private:
+  std::shared_ptr<TrieNode> root_;
+
+public:
+  Trie() : root_( std::make_shared<TrieNode>() ) {}
+
+  void insert_ip( uint32_t ip, uint8_t prefix, uint8_t end_value )
+  {
+    auto pointer = root_;
+    for ( uint8_t i = 0; i < prefix; i++ ) {
+      uint8_t bit = ( ip >> ( 31 - i ) ) & 0x1;
+      if ( !pointer->next_[bit] ) {
+        pointer->next_[bit] = std::make_shared<TrieNode>();
+      }
+      pointer = pointer->next_[bit];
+    }
+    pointer->end_value_ = end_value;
+  }
+
+  std::optional<uint8_t> search_longest_prefix( uint32_t ip )
+  {
+    std::optional<uint8_t> result = root_->end_value_;
+    auto pointer = root_;
+
+    for ( int i = 31; i >= 0; i-- ) {
+      uint8_t bit = ( ip >> i ) & 0x1;
+      if ( !pointer->next_[bit] ) {
+        break;
+      }
+      pointer = pointer->next_[bit];
+      if ( pointer->end_value_.has_value() ) {
+        result = pointer->end_value_; // 更新最长匹配
+      }
+    }
+    return result;
+  }
+};
+
 class Router
 {
 public:
@@ -35,4 +85,6 @@ public:
 private:
   // The router's collection of network interfaces
   std::vector<std::shared_ptr<NetworkInterface>> _interfaces {};
+  Trie trie_ {};
+  std::vector<std::pair<std::optional<Address>, size_t>> route_list_ {};
 };

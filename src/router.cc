@@ -20,11 +20,33 @@ void Router::add_route( const uint32_t route_prefix,
        << static_cast<int>( prefix_length ) << " => " << ( next_hop.has_value() ? next_hop->ip() : "(direct)" )
        << " on interface " << interface_num << "\n";
 
-  // Your code here.
+  trie_.insert_ip( route_prefix, prefix_length, route_list_.size() );
+  route_list_.emplace_back( next_hop, interface_num );
 }
 
 // Go through all the interfaces, and route every incoming datagram to its proper outgoing interface.
 void Router::route()
 {
-  // Your code here.
+  for ( const auto& i : _interfaces ) {
+    auto& queue = i->datagrams_received();
+    while ( !queue.empty() ) {
+      auto& dgram = queue.front();
+      if ( dgram.header.ttl <= 1 ) {
+        queue.pop();
+        continue;
+      }
+      dgram.header.ttl--;
+      dgram.header.compute_checksum();
+      auto route_idx = trie_.search_longest_prefix( dgram.header.dst );
+      if ( route_idx.has_value() ) {
+        const auto& [next_hop, interface_num] = route_list_[route_idx.value()];
+
+        // 如果有 next_hop，使用它；否则使用目标地址（直连网络）
+        Address target = next_hop.has_value() ? next_hop.value() : Address::from_ipv4_numeric( dgram.header.dst );
+
+        interface( interface_num )->send_datagram( dgram, target );
+      }
+      queue.pop();
+    }
+  }
 }
